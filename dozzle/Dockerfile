@@ -2,38 +2,19 @@
 ARG DOZZLE_VERSION=latest
 FROM amir20/dozzle:${DOZZLE_VERSION} AS dozzle
 
-# Use Alpine as base for Home Assistant addon
-FROM alpine:3.19
+# Use Home Assistant addon base image which includes bashio
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:latest
+FROM ${BUILD_FROM}
 
-# Install bashio for Home Assistant addon functionality
+# Build arguments
 ARG BUILD_ARCH
 ARG BUILD_VERSION
 
-# Install dependencies
-RUN apk add --no-cache \
-    curl \
-    jq \
-    bash \
-    tar \
-    ca-certificates
-
-# Set shell to bash
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-# Install bashio
-RUN curl -J -L -o /tmp/bashio.tar.gz \
-    "https://github.com/hassio-addons/bashio/archive/v0.16.2.tar.gz" \
-    && tar zxvf /tmp/bashio.tar.gz --strip 1 -C /tmp \
-    && mv /tmp/lib /usr/lib/bashio \
-    && ln -s /usr/lib/bashio/bashio /usr/bin/bashio \
-    && rm -rf /tmp/*
-
 # Copy Dozzle binary from official image
-COPY --from=dozzle /dozzle /dozzle
+COPY --from=dozzle /dozzle /usr/bin/dozzle
 
-# Create a non-root user
-RUN addgroup -g 1000 dozzle && \
-    adduser -D -s /bin/bash -u 1000 -G dozzle dozzle
+# Make dozzle executable
+RUN chmod +x /usr/bin/dozzle
 
 # Labels
 LABEL \
