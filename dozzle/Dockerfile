@@ -1,5 +1,5 @@
 # Build arguments that need to be available across stages
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:latest
+ARG BUILD_FROM=ghcr.io/hassio-addons/base/amd64:latest
 ARG DOZZLE_VERSION=latest
 
 # Multi-stage build to get Dozzle binary

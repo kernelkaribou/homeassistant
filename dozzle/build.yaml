@@ -1,10 +1,10 @@
 {
   "build_from": {
-    "aarch64": "ghcr.io/hassio-addons/base:latest",
-    "amd64": "ghcr.io/hassio-addons/base:latest",
-    "armhf": "ghcr.io/hassio-addons/base:latest",
-    "armv7": "ghcr.io/hassio-addons/base:latest",
-    "i386": "ghcr.io/hassio-addons/base:latest"
+    "aarch64": "ghcr.io/hassio-addons/base/aarch64:latest",
+    "amd64": "ghcr.io/hassio-addons/base/amd64:latest",
+    "armhf": "ghcr.io/hassio-addons/base/armhf:latest",
+    "armv7": "ghcr.io/hassio-addons/base/armv7:latest",
+    "i386": "ghcr.io/hassio-addons/base/i386:latest"
   },
   "args": {
     "DOZZLE_VERSION": "latest"
