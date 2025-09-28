@@ -73,6 +73,7 @@ FILTER=$(get_config 'filter' '')
 
 # Debug output
 log_info "Configuration loaded:"
+log_info "  REMOTE_HOST: ${REMOTE_HOST}"
 log_info "  NO_ANALYTICS: ${NO_ANALYTICS}"
 log_info "  ENABLE_ACTIONS: ${ENABLE_ACTIONS}"
 log_info "  LEVEL: ${LEVEL}"
@@ -80,8 +81,17 @@ log_info "  AUTH_PROVIDER: ${AUTH_PROVIDER}"
 
 # Add remote host configuration if provided
 if has_value "${REMOTE_HOST}"; then
-    ARGS+=(--remote-host "${REMOTE_HOST}")
+    # Handle multiple remote hosts separated by commas
+    IFS=',' read -ra HOST_ARRAY <<< "$REMOTE_HOST"
+    for host in "${HOST_ARRAY[@]}"; do
+        # Trim whitespace and add each host as separate argument
+        host=$(echo "$host" | xargs)
+        if [ -n "$host" ]; then
+            ARGS+=(--remote-host "$host")
+        fi
+    done
     
+    # Add remote user and key if provided (applies to all remote hosts)
     if has_value "${REMOTE_USER}"; then
         ARGS+=(--remote-user "${REMOTE_USER}")
     fi
