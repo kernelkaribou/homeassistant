@@ -2,7 +2,7 @@ name: "Dozzle"
 version: "dev"
 slug: "dozzle"
 description: "A simple, lightweight application that provides you with a web based interface to monitor your Docker container logs live."
-url: "https://github.com/kernelkaribou/homeassistant/dozzle"
+url: "https://dozzle.dev"
 arch:
   - armv7
   - aarch64
@@ -10,6 +10,7 @@ arch:
 init: false
 startup: services
 ingress: true
+ingress_port: 8080
 ports:
   8080/tcp: 8080
 ports_description:
@@ -42,4 +43,5 @@ schema:
   auth_header_email: "str?"
   auth_header_name: "str?"
   filter: "str?"
-image: "ghcr.io/kernelkaribou/addon-dozzle-{arch}"
+auth_api: false
+hassio_api: true
