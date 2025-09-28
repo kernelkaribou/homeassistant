@@ -93,7 +93,7 @@ jobs:
           build-args: |
             BUILD_ARCH=${{ matrix.arch }}
             BUILD_VERSION=${{ needs.check-version.outputs.addon-version }}
-            DOZZLE_VERSION=${{ needs.check-version.outputs.dozzle-version }}
+            DOZZLE_VERSION=v${{ needs.check-version.outputs.dozzle-version }}
 
   commit-version:
     needs: [check-version, build]

@@ -1,12 +1,25 @@
-ARG BUILD_FROM
-FROM ${BUILD_FROM}
-
 # Get the latest Dozzle version
-ARG DOZZLE_VERSION
-FROM amir20/dozzle:${DOZZLE_VERSION:-latest}
+ARG DOZZLE_VERSION=latest
+FROM amir20/dozzle:${DOZZLE_VERSION}
 
 # Set shell
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Install bashio for Home Assistant addon functionality
+ARG BUILD_ARCH
+ARG BUILD_VERSION
+RUN apk add --no-cache \
+    curl \
+    jq \
+    bash
+
+# Install bashio
+RUN curl -J -L -o /tmp/bashio.tar.gz \
+    "https://github.com/hassio-addons/bashio/archive/v0.16.2.tar.gz" \
+    && tar zxvf /tmp/bashio.tar.gz --strip 1 -C /tmp \
+    && mv /tmp/lib /usr/lib/bashio \
+    && ln -s /usr/lib/bashio/bashio /usr/bin/bashio \
+    && rm -rf /tmp/*
 
 # Labels
 LABEL \
