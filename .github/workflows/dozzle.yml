@@ -10,6 +10,10 @@ on:
       - 'dozzle/**'
       - '.github/workflows/dozzle.yml'
 
+permissions:
+  contents: write
+  packages: write
+
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}/addon-dozzle
@@ -73,12 +77,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Log current versions
+      - name: Update addon version
         run: |
-          echo "Building Dozzle addon with:"
-          echo "  Config version: $(grep '^version:' dozzle/config.yaml | cut -d':' -f2 | tr -d ' \"')"
-          echo "  Build version: $(grep '^version:' dozzle/build.yaml | cut -d':' -f2 | tr -d ' \"')"
-          echo "  Target Dozzle version: v${{ needs.check-version.outputs.dozzle-version }}"
+          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/config.yaml
+          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/build.yaml
 
       - name: Extract metadata
         id: meta
@@ -109,15 +111,23 @@ jobs:
     needs: [check-version, build]
     if: needs.check-version.outputs.should-build == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Build completed successfully
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update addon version
         run: |
-          echo "✅ Dozzle addon build completed successfully!"
-          echo "🎉 Version ${{ needs.check-version.outputs.addon-version }} is now available"
-          echo "📦 Container images published to GitHub Packages"
-          echo ""
-          echo "Note: Version files are updated during the build process."
-          echo "If you need to commit version changes, please do so manually."
+          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/config.yaml
+          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/build.yaml
+
+      - name: Commit version update
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add dozzle/config.yaml dozzle/build.yaml
+          git diff --staged --quiet || (git commit -m "Update Dozzle addon to version ${{ needs.check-version.outputs.addon-version }}" && git push)
 
   cleanup-packages:
     needs: [check-version, build]
