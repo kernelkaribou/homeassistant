@@ -1,0 +1,93 @@
+# =========================================================================
+# HOME ASSISTANT SNMP SENSORS FOR CYBERPOWER CP1500PFCRM2U/RM205 Card
+# 
+# Reverted to using the Load Percentage OID (4.2.3.0) and calculating Watts
+# by multiplying by 10, as the direct Watts OID (4.2.4.0) was unreliable.
+# (1000W max capacity = 10W per 1% load)
+# 
+# NOTE: This configuration uses the legacy 'platform: snmp' structure.
+# Replace 'UPS HOSTNAME/IP' and 'SNMP COMMUNITY'.
+# =========================================================================
+sensor:
+  # 1. UPS Status Sensor (For Automation)
+  - platform: snmp
+    name: "Homelab UPS Status"
+    unique_id: "homelab_ups_status" # Explicit unique ID
+    host: <UPS HOSTNAME/IP>
+    community: <SNMP COMMUNITY> 
+    #version: 2c
+    # OID for UPS Output Status
+    baseoid: 1.3.6.1.4.1.3808.1.1.1.4.1.1.0
+    scan_interval: 10
+    # Maps the numeric status code returned by the UPS to human-readable text
+    value_template: >
+      {% set status_code = value | int %}
+      {% if status_code == 2 %} Online
+      {% elif status_code == 3 %} On Battery
+      {% elif status_code == 4 %} On Boost
+      {% elif status_code == 5 %} On Sleep
+      {% elif status_code == 6 %} Off
+      {% elif status_code == 7 %} Rebooting
+      {% else %} Unknown Status ({{ status_code }})
+      {% endif %}
+
+  # 2. Output Load Sensor (Percentage)
+  - platform: snmp
+    name: "Homelab UPS Load Percent"
+    host: <UPS HOSTNAME/IP>
+    unique_id: "homelab_ups_load_percent" # Explicit unique ID
+    community: <SNMP COMMUNITY> 
+    #version: 2c
+    # OID for Output Load Percentage
+    baseoid: 1.3.6.1.4.1.3808.1.1.1.4.2.3.0
+    unit_of_measurement: "%"
+    device_class: power_factor 
+    state_class: measurement
+    scan_interval: 10
+    # Renamed the sensor to be explicit about the unit.
+
+  # 3. Output Load Sensor (Watts - for Energy Dashboard)
+  - platform: snmp
+    name: "Homelab UPS Load Watts"
+    unique_id: "homelab_ups_load_watts"
+    host: <UPS HOSTNAME/IP>
+    community: <SNMP COMMUNITY> 
+    #version: 2c
+    # OID for Output Load Percentage (4.2.3.0)
+    baseoid: 1.3.6.1.4.1.3808.1.1.1.4.2.3.0
+    unit_of_measurement: "W"
+    device_class: power # Crucial for Energy Dashboard power consumption
+    state_class: measurement
+    scan_interval: 10
+    # Calculation: Load Percentage * 10 (since the UPS is 1000W max)
+    value_template: "{{ (value | int) * 10 }}"
+
+  # 4. Battery Time Remaining Sensor (For Alerts)
+  - platform: snmp
+    name: "Homelab UPS Battery Runtime"
+    unique_id: "homelab_ups_battery_runtime"
+    host: <UPS HOSTNAME/IP>
+    community: <SNMP COMMUNITY> 
+    #version: 2c
+    # OID for Battery Run Time Remaining (in seconds)
+    baseoid: 1.3.6.1.4.1.3808.1.1.1.2.2.4.0
+    unit_of_measurement: "min"
+    device_class: duration
+    state_class: measurement
+    scan_interval: 10
+    # Converts seconds (from the OID) to minutes, rounded to 1 decimal place
+    value_template: "{{((value | int) / 6000) | int}}"
+
+  # 5. Battery Capacity Sensor (Optional)
+  - platform: snmp
+    name: "Homelab UPS Battery Capacity"
+    unique_id: "homelab_ups_battery_capacity"
+    host: <UPS HOSTNAME/IP>
+    community: <SNMP COMMUNITY> 
+    #version: 2c
+    # OID for Battery Capacity Percentage
+    baseoid: 1.3.6.1.4.1.3808.1.1.1.2.2.1.0
+    unit_of_measurement: "%"
+    device_class: battery
+    state_class: measurement
+    scan_interval: 10
