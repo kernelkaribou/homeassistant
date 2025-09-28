@@ -86,13 +86,13 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./dozzle
-          platforms: linux/${{ matrix.arch == 'armhf' && 'arm/v6' || matrix.arch == 'armv7' && 'arm/v7' || matrix.arch == 'aarch64' && 'arm64' || matrix.arch }}
+          platforms: linux/${{ matrix.arch == 'armv7' && 'arm/v7' || matrix.arch == 'aarch64' && 'arm64' || matrix.arch }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             # Use the full, architecture-specific path from the Add-ons repository.
-            BUILD_FROM=ghcr.io/hassio-addons/addon-base/base/${{ matrix.arch }}:latest 
+            BUILD_FROM=ghcr.io/hassio-addons/base/${{ matrix.arch }}:latest
             BUILD_ARCH=${{ matrix.arch }}
             BUILD_VERSION=${{ needs.check-version.outputs.addon-version }}
             DOZZLE_VERSION=v${{ needs.check-version.outputs.dozzle-version }}

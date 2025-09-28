@@ -1,11 +1,5 @@
 build_from:
-  aarch64: "ghcr.io/hassio-addons/base:latest"
-  amd64: "ghcr.io/hassio-addons/base:latest"
-  armhf: "ghcr.io/hassio-addons/base:latest"
-  armv7: "ghcr.io/hassio-addons/base:latest"
-  i386: "ghcr.io/hassio-addons/base:latest"
-
-args:
-  DOZZLE_VERSION: "latest"
-
-upstream: "https://github.com/amir20/dozzle"
+  aarch64: ghcr.io/hassio-addons/base:latest
+  amd64: ghcr.io/hassio-addons/base:latest
+  armv7: ghcr.io/hassio-addons/base:latest
+version: latest
