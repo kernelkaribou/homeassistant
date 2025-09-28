@@ -92,7 +92,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             # Use the full, architecture-specific path from the Add-ons repository.
-            BUILD_FROM=ghcr.io/hassio-addons/addon-base/${{ matrix.arch }}:latest 
+            BUILD_FROM=ghcr.io/hassio-addons/addon-base/base/${{ matrix.arch }}:latest 
             BUILD_ARCH=${{ matrix.arch }}
             BUILD_VERSION=${{ needs.check-version.outputs.addon-version }}
             DOZZLE_VERSION=v${{ needs.check-version.outputs.dozzle-version }}
