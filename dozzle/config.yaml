@@ -30,70 +30,18 @@ options:
   auth_header_name: ""
   filter: ""
 schema:
-  remote_host:
-    name: "Remote Hosts"
-    description: "Comma-separated list of remote Docker hosts to connect to (e.g., tcp://host1:2376,tcp://host2:2376)"
-    required: false
-    type: "str?"
-  remote_user:
-    name: "Remote User"
-    description: "Username for remote Docker host authentication"
-    required: false
-    type: "str?"
-  remote_key:
-    name: "Remote Key"
-    description: "Private key path or content for remote Docker host authentication"
-    required: false
-    type: "str?"
-  no_analytics:
-    name: "Disable Analytics"
-    description: "Disable anonymous usage analytics"
-    required: true
-    type: "bool"
-  enable_actions:
-    name: "Enable Actions"
-    description: "Enable container actions (start, stop, restart)"
-    required: true
-    type: "bool"
-  hostname:
-    name: "Hostname"
-    description: "Override hostname for the web interface"
-    required: false
-    type: "str?"
-  base:
-    name: "Base Path"
-    description: "Base URL path for reverse proxy setups (e.g., /dozzle)"
-    required: false
-    type: "str?"
-  level:
-    name: "Log Level"
-    description: "Minimum log level to display"
-    required: false
-    type: "list(trace|debug|info|warn|error|fatal|panic)?"
-  auth_provider:
-    name: "Authentication Provider"
-    description: "Authentication method for the web interface"
-    required: false
-    type: "list(none|forward-proxy)?"
-  auth_header_user:
-    name: "Auth Header - User"
-    description: "Header name containing username (for forward-proxy auth)"
-    required: false
-    type: "str?"
-  auth_header_email:
-    name: "Auth Header - Email"
-    description: "Header name containing email (for forward-proxy auth)"
-    required: false
-    type: "str?"
-  auth_header_name:
-    name: "Auth Header - Name"
-    description: "Header name containing display name (for forward-proxy auth)"
-    required: false
-    type: "str?"
-  filter:
-    name: "Container Filter"
-    description: "Filter containers by name or label (regex supported)"
-    required: false
-    type: "str?"
+  remote_host: "str?"
+  remote_user: "str?"
+  remote_key: "str?"
+  no_analytics: "bool"
+  enable_actions: "bool"
+  hostname: "str?"
+  base: "str?"
+  level: "list(trace|debug|info|warn|error|fatal|panic)?"
+  auth_provider: "list(none|forward-proxy)?"
+  auth_header_user: "str?"
+  auth_header_email: "str?"
+  auth_header_name: "str?"
+  filter: "str?"
 auth_api: false
 hassio_api: true

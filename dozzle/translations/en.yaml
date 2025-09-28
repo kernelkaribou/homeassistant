@@ -1,0 +1,40 @@
+configuration:
+  remote_host:
+    name: Remote Hosts
+    description: Comma-separated list of remote Docker hosts to connect to (e.g., tcp://host1:2376,tcp://host2:2376)
+  remote_user:
+    name: Remote User
+    description: Username for remote Docker host authentication
+  remote_key:
+    name: Remote Key
+    description: Private key path or content for remote Docker host authentication
+  no_analytics:
+    name: Disable Analytics
+    description: Disable anonymous usage analytics sent to Dozzle developers
+  enable_actions:
+    name: Enable Actions
+    description: Enable container actions (start, stop, restart) in the web interface
+  hostname:
+    name: Hostname Override
+    description: Override hostname displayed in the web interface
+  base:
+    name: Base Path
+    description: Base URL path for reverse proxy setups (e.g., /dozzle)
+  level:
+    name: Log Level
+    description: Minimum log level to display in the interface
+  auth_provider:
+    name: Authentication Provider
+    description: Authentication method for securing the web interface
+  auth_header_user:
+    name: Auth Header - User
+    description: HTTP header name containing username (for forward-proxy authentication)
+  auth_header_email:
+    name: Auth Header - Email
+    description: HTTP header name containing email address (for forward-proxy authentication)
+  auth_header_name:
+    name: Auth Header - Name
+    description: HTTP header name containing display name (for forward-proxy authentication)
+  filter:
+    name: Container Filter
+    description: Filter containers by name or label using regex patterns
