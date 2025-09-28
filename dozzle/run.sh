@@ -93,4 +93,4 @@ ARGS+=(--addr :8080)
 bashio::log.info "Starting Dozzle with args: ${ARGS[*]}"
 
 # Start Dozzle
-exec /dozzle "${ARGS[@]}"
+exec /usr/bin/dozzle "${ARGS[@]}"

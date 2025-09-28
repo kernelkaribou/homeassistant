@@ -35,4 +35,5 @@ LABEL \
 COPY run.sh /
 RUN chmod a+x /run.sh
 
+# Start Dozzle
 CMD [ "/run.sh" ]
