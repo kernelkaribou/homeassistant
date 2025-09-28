@@ -4,93 +4,144 @@
 # Runs Dozzle
 # ==============================================================================
 
+set -e
+
 # Build command arguments
 ARGS=()
 
-# Get configuration options
-REMOTE_HOST=$(bashio::config 'remote_host')
-REMOTE_USER=$(bashio::config 'remote_user')  
-REMOTE_KEY=$(bashio::config 'remote_key')
-NO_ANALYTICS=$(bashio::config 'no_analytics')
-ENABLE_ACTIONS=$(bashio::config 'enable_actions')
-HOSTNAME=$(bashio::config 'hostname')
-BASE=$(bashio::config 'base')
-LEVEL=$(bashio::config 'level')
-AUTH_PROVIDER=$(bashio::config 'auth_provider')
-AUTH_HEADER_USER=$(bashio::config 'auth_header_user')
-AUTH_HEADER_EMAIL=$(bashio::config 'auth_header_email')
-AUTH_HEADER_NAME=$(bashio::config 'auth_header_name')
-FILTER=$(bashio::config 'filter')
+# Get configuration options with fallback for missing bashio functions
+get_config() {
+    local key="$1"
+    local default="$2"
+    if command -v bashio::config >/dev/null 2>&1; then
+        bashio::config "$key" "$default" 2>/dev/null || echo "$default"
+    else
+        echo "$default"
+    fi
+}
+
+has_value() {
+    local var="$1"
+    if command -v bashio::var.has_value >/dev/null 2>&1; then
+        bashio::var.has_value "$var" 2>/dev/null
+    else
+        [ -n "$var" ] && [ "$var" != "null" ]
+    fi
+}
+
+is_true() {
+    local var="$1"
+    if command -v bashio::var.is_true >/dev/null 2>&1; then
+        bashio::var.is_true "$var" 2>/dev/null
+    else
+        [ "$var" = "true" ] || [ "$var" = "1" ] || [ "$var" = "yes" ]
+    fi
+}
+
+equals() {
+    local var="$1"
+    local value="$2"
+    if command -v bashio::var.equals >/dev/null 2>&1; then
+        bashio::var.equals "$var" "$value" 2>/dev/null
+    else
+        [ "$var" = "$value" ]
+    fi
+}
+
+log_info() {
+    local message="$1"
+    if command -v bashio::log.info >/dev/null 2>&1; then
+        bashio::log.info "$message"
+    else
+        echo "[INFO] $message"
+    fi
+}
+
+REMOTE_HOST=$(get_config 'remote_host' '')
+REMOTE_USER=$(get_config 'remote_user' '')
+REMOTE_KEY=$(get_config 'remote_key' '')
+NO_ANALYTICS=$(get_config 'no_analytics' 'true')
+ENABLE_ACTIONS=$(get_config 'enable_actions' 'false')
+HOSTNAME=$(get_config 'hostname' '')
+BASE=$(get_config 'base' '')
+LEVEL=$(get_config 'level' 'info')
+AUTH_PROVIDER=$(get_config 'auth_provider' 'none')
+AUTH_HEADER_USER=$(get_config 'auth_header_user' '')
+AUTH_HEADER_EMAIL=$(get_config 'auth_header_email' '')
+AUTH_HEADER_NAME=$(get_config 'auth_header_name' '')
+FILTER=$(get_config 'filter' '')
+
+# Debug output
+log_info "Configuration loaded:"
+log_info "  NO_ANALYTICS: ${NO_ANALYTICS}"
+log_info "  ENABLE_ACTIONS: ${ENABLE_ACTIONS}"
+log_info "  LEVEL: ${LEVEL}"
+log_info "  AUTH_PROVIDER: ${AUTH_PROVIDER}"
 
 # Add remote host configuration if provided
-if bashio::var.has_value "${REMOTE_HOST}"; then
+if has_value "${REMOTE_HOST}"; then
     ARGS+=(--remote-host "${REMOTE_HOST}")
     
-    if bashio::var.has_value "${REMOTE_USER}"; then
+    if has_value "${REMOTE_USER}"; then
         ARGS+=(--remote-user "${REMOTE_USER}")
     fi
     
-    if bashio::var.has_value "${REMOTE_KEY}"; then
+    if has_value "${REMOTE_KEY}"; then
         ARGS+=(--remote-key "${REMOTE_KEY}")
     fi
 fi
 
 # Add hostname if provided
-if bashio::var.has_value "${HOSTNAME}"; then
+if has_value "${HOSTNAME}"; then
     ARGS+=(--hostname "${HOSTNAME}")
 fi
 
 # Add base path if provided
-if bashio::var.has_value "${BASE}"; then
+if has_value "${BASE}"; then
     ARGS+=(--base "${BASE}")
 fi
 
 # Add log level if provided
-if bashio::var.has_value "${LEVEL}"; then
+if has_value "${LEVEL}"; then
     ARGS+=(--level "${LEVEL}")
 fi
 
 # Add filter if provided
-if bashio::var.has_value "${FILTER}"; then
+if has_value "${FILTER}"; then
     ARGS+=(--filter "${FILTER}")
 fi
 
 # Add authentication configuration
-if bashio::var.equals "${AUTH_PROVIDER}" "forward-proxy"; then
+if equals "${AUTH_PROVIDER}" "forward-proxy"; then
     ARGS+=(--auth-provider forward-proxy)
     
-    if bashio::var.has_value "${AUTH_HEADER_USER}"; then
+    if has_value "${AUTH_HEADER_USER}"; then
         ARGS+=(--auth-header-user "${AUTH_HEADER_USER}")
     fi
     
-    if bashio::var.has_value "${AUTH_HEADER_EMAIL}"; then
+    if has_value "${AUTH_HEADER_EMAIL}"; then
         ARGS+=(--auth-header-email "${AUTH_HEADER_EMAIL}")
     fi
     
-    if bashio::var.has_value "${AUTH_HEADER_NAME}"; then
+    if has_value "${AUTH_HEADER_NAME}"; then
         ARGS+=(--auth-header-name "${AUTH_HEADER_NAME}")
     fi
 fi
 
 # Disable analytics if requested
-if bashio::var.is_true "${NO_ANALYTICS}"; then
+if is_true "${NO_ANALYTICS}"; then
     ARGS+=(--no-analytics)
 fi
 
 # Enable actions if requested
-if bashio::var.is_true "${ENABLE_ACTIONS}"; then
+if is_true "${ENABLE_ACTIONS}"; then
     ARGS+=(--enable-actions)
-fi
-
-# Set timeout
-if bashio::var.has_value "${TIMEOUT}"; then
-    ARGS+=(--timeout "${TIMEOUT}")
 fi
 
 # Set the web address, default to :8080 if not set
 ARGS+=(--addr :8080)
 
-bashio::log.info "Starting Dozzle with args: ${ARGS[*]}"
+log_info "Starting Dozzle with args: ${ARGS[*]}"
 
 # Start Dozzle
 exec /usr/bin/dozzle "${ARGS[@]}"

@@ -12,6 +12,14 @@ FROM ${BUILD_FROM}
 ARG BUILD_ARCH
 ARG BUILD_VERSION
 
+# Install any missing dependencies and verify bashio
+RUN \
+    if ! command -v bashio::config >/dev/null 2>&1; then \
+        echo "bashio not available, addon will use fallback functions"; \
+    else \
+        echo "bashio is available"; \
+    fi
+
 # Copy Dozzle binary from official image
 COPY --from=dozzle /dozzle /usr/bin/dozzle
 
