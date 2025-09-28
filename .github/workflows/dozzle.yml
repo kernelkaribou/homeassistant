@@ -134,7 +134,7 @@ jobs:
       packages: write
     steps:
       - name: Delete old package versions
-        uses: actions/delete-package-versions@v4
+        uses: actions/delete-package-versions@v5
         with:
           package-name: 'addon-dozzle'
           package-type: 'container'
