@@ -1,0 +1,9 @@
+{
+  "name": "KernelKaribou's Home Assistant Add-ons",
+  "url": "https://github.com/kernelkaribou/homeassistant",
+  "maintainer": "KernelKaribou",
+  "addons": [
+    "dozzle",
+    "Beszel"
+  ]
+}
