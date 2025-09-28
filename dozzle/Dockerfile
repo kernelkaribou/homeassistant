@@ -1,9 +1,11 @@
-# Multi-stage build to get Dozzle binary
+# Build arguments that need to be available across stages
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:latest
 ARG DOZZLE_VERSION=latest
+
+# Multi-stage build to get Dozzle binary
 FROM amir20/dozzle:${DOZZLE_VERSION} AS dozzle
 
 # Use Home Assistant addon base image which includes bashio
-ARG BUILD_FROM=ghcr.io/hassio-addons/base:latest
 FROM ${BUILD_FROM}
 
 # Build arguments
