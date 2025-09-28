@@ -2,16 +2,19 @@
 ARG DOZZLE_VERSION=latest
 FROM amir20/dozzle:${DOZZLE_VERSION}
 
-# Set shell
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
 # Install bashio for Home Assistant addon functionality
 ARG BUILD_ARCH
 ARG BUILD_VERSION
+
+# Install dependencies (using default shell first)
 RUN apk add --no-cache \
     curl \
     jq \
-    bash
+    bash \
+    tar
+
+# Set shell to bash after it's installed
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install bashio
 RUN curl -J -L -o /tmp/bashio.tar.gz \
