@@ -10,6 +10,7 @@ arch:
 init: false
 startup: services
 ingress: true
+ingress_entry: /dozzle
 ingress_port: 8080
 ports:
   8080/tcp: 8080
@@ -38,7 +39,7 @@ schema:
   hostname: "str?"
   base: "str?"
   level: "list(trace|debug|info|warn|error|fatal|panic)?"
-  auth_provider: "list(none|forward-proxy)?"
+  auth_provider: "list(none|simple|forward-proxy)?"
   auth_header_user: "str?"
   auth_header_email: "str?"
   auth_header_name: "str?"
