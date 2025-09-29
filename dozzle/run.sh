@@ -44,13 +44,10 @@ ingress_entry=$(bashio::addon.ingress_entry)
 sed -i "s#%%ingress_entry%%#${ingress_entry}#g" /etc/nginx/servers/ingress.conf
 ARGS+=(--base "${ingress_entry}")
 
+# Start NGINX
+bashio::log.info "Starting NGINX..."
+nginx & 
+
 # Start Dozzle
 bashio::log.info "Starting Dozzle with args: ${ARGS[*]}"
 exec /usr/bin/dozzle "${ARGS[@]}"
-
-# # Wait for dozzle to become available
-# bashio::net.wait_for 8080
-
-# Start NGINX
-bashio::log.info "Starting NGINX..."
-exec nginx 
