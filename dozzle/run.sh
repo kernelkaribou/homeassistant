@@ -106,10 +106,8 @@ if has_value "${HOSTNAME}"; then
     ARGS+=(--hostname "${HOSTNAME}")
 fi
 
-# Add base path if provided
-if has_value "${BASE}"; then
-    ARGS+=(--base "${BASE}")
-fi
+# Add base path from ingress
+ARGS+=(--base "/dozzle")
 
 # Add log level if provided
 if has_value "${LEVEL}"; then

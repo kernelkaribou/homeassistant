@@ -22,7 +22,6 @@ options:
   no_analytics: true
   enable_actions: false
   hostname: ""
-  base: ""
   level: "info"
   auth_provider: "none"
   auth_header_user: ""
@@ -36,7 +35,6 @@ schema:
   no_analytics: "bool"
   enable_actions: "bool"
   hostname: "str?"
-  base: "str?"
   level: "list(trace|debug|info|warn|error|fatal|panic)?"
   auth_provider: "list(none|simple|forward-proxy)?"
   auth_header_user: "str?"
