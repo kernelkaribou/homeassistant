@@ -52,7 +52,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./test-nginx
+          context: ./nginx-test
           platforms: linux/${{ matrix.arch == 'armv7' && 'arm/v7' || matrix.arch }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
