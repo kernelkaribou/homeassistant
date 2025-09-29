@@ -40,7 +40,7 @@ ENABLE_ACTIONS=$(bashio::config 'enable_actions')
 [ "${ENABLE_ACTIONS}" = "true" ] && ARGS+=(--enable-actions)
 
 # Explicitly set Dozzle to listen on localhost:8080
-ARGS+=(--addr '127.0.0.1:8080')
+# ARGS+=(--addr '127.0.0.1:8080')
 
 # Determining ingress entry for base path
 ingress_entry=$(bashio::addon.ingress_entry)
