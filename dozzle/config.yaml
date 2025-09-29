@@ -10,6 +10,7 @@ arch:
 init: false
 startup: services
 ingress: true
+ingress_port: 80
 options:
   remote_host: ""
   no_analytics: true
