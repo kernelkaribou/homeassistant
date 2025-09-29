@@ -48,8 +48,8 @@ ARGS+=(--base "${ingress_entry}")
 bashio::log.info "Starting Dozzle with args: ${ARGS[*]}"
 exec /usr/bin/dozzle "${ARGS[@]}"
 
-# Wait for dozzle to become available
-bashio::net.wait_for 8080
+# # Wait for dozzle to become available
+# bashio::net.wait_for 8080
 
 # Start NGINX
 bashio::log.info "Starting NGINX..."
