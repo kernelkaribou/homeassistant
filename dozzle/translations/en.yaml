@@ -17,9 +17,6 @@ configuration:
   hostname:
     name: Hostname Override
     description: Override hostname displayed in the web interface
-  base:
-    name: Base Path
-    description: Base URL path for reverse proxy setups (e.g., /dozzle)
   level:
     name: Log Level
     description: Minimum log level to display in the interface
