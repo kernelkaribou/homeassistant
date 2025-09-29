@@ -7,7 +7,7 @@ arch:
   - armv7
   - aarch64
   - amd64
-# init: true
+init: false
 startup: services
 ingress: true
 ingress_port: 80
