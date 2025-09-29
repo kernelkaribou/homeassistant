@@ -9,10 +9,10 @@ arch:
   - amd64
 init: false
 startup: services
-ingress: true
-ingress_port: 80
+# ingress: true
+# ingress_port: 80
 ports:
-  8080/tcp: 8080
+  80/tcp: 80
 options:
   remote_host: ""
   no_analytics: true
