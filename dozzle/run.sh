@@ -50,9 +50,12 @@ ARGS+=(--base "${ingress_entry}")
 #Ingress config debug
 cat /etc/nginx/servers/ingress.conf
 
+# Checking Nginx Syntax
+nginx -t -c /etc/nginx/nginx.conf
+
 # Start NGINX
 bashio::log.info "Starting NGINX..."
-nginx -g "daemon off; error_log /proc/1/fd/2 info;" &
+nginx -g "error_log /proc/1/fd/2 info;" &
 NGINX_PID=$!
 
 # Start Dozzle
