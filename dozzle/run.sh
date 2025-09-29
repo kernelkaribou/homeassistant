@@ -149,9 +149,12 @@ if is_true "${ENABLE_ACTIONS}"; then
 fi
 
 # Set the web address, default to :8080 if not set
-ARGS+=(--addr :8080)
+ARGS+=(--addr '127.0.0.1:8081')
 
 log_info "Starting Dozzle with args: ${ARGS[*]}"
+
+# Start NGINX
+nginx &
 
 # Start Dozzle
 exec /usr/bin/dozzle "${ARGS[@]}"

@@ -40,8 +40,9 @@ LABEL \
     org.opencontainers.image.licenses="MIT"
 
 # Copy run script
-COPY run.sh /
-RUN chmod a+x /run.sh
+RUN apk add --no-cache nginx
+COPY rootfs /
+RUN chmod +x /usr/bin/run.sh
 
 # Start Dozzle
 CMD [ "/run.sh" ]
