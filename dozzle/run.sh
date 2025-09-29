@@ -9,57 +9,35 @@ set -e
 # Build command arguments
 ARGS=()
 
-REMOTE_HOST=$(bashio::config 'remote_host')
-NO_ANALYTICS=$(bashio::config 'no_analytics')
-ENABLE_ACTIONS=$(bashio::config 'enable_actions')
-HOSTNAME=$(bashio::config 'hostname')
-LEVEL=$(bashio::config 'level')
-FILTER=$(bashio::config 'filter')
-
-# Debug output
-bashio::log.info "Configuration loaded:"
-bashio::log.info "  REMOTE_HOST: ${REMOTE_HOST}"
-bashio::log.info "  NO_ANALYTICS: ${NO_ANALYTICS}"
-bashio::log.info "  ENABLE_ACTIONS: ${ENABLE_ACTIONS}"
-bashio::log.info "  LEVEL: ${LEVEL}"
-
 # Add remote host configuration if provided
+REMOTE_HOST=$(bashio::config 'remote_host')
 if bashio::var.has_value "${REMOTE_HOST}"; then
-    # Handle multiple remote hosts separated by commas
-    IFS=',' read -ra HOST_ARRAY <<< "$REMOTE_HOST"
-    for host in "${HOST_ARRAY[@]}"; do
-        # Trim whitespace and add each host as separate argument
-        host=$(echo "$host" | xargs)
-        if [ -n "$host" ]; then
-            ARGS+=(--remote-host "$host")
-        fi
+    # Split on commas, trim whitespace and add each as --remote-host
+    for host in ${REMOTE_HOST//,/ }; do
+        host="$(echo "$host" | xargs)"
+        [ -n "$host" ] && ARGS+=(--remote-host "$host")
     done
 fi
 
 # Add hostname if provided
-if bashio::var.has_value "${HOSTNAME}"; then
-    ARGS+=(--hostname "${HOSTNAME}")
-fi
+HOSTNAME=$(bashio::config 'hostname')
+[ -n "${HOSTNAME}" ] && ARGS+=(--hostname "${HOSTNAME}")
 
 # Add log level if provided
-if bashio::var.has_value "${LEVEL}"; then
-    ARGS+=(--level "${LEVEL}")
-fi
+LEVEL=$(bashio::config 'level')
+[ -n "${LEVEL}" ] && ARGS+=(--level "${LEVEL}")
 
 # Add filter if provided
-if bashio::var.has_value "${FILTER}"; then
-    ARGS+=(--filter "${FILTER}")
-fi
+FILTER=$(bashio::config 'filter')
+[ -n "${FILTER}" ] && ARGS+=(--filter "${FILTER}")
 
 # Disable analytics if requested
-if bashio::var.is_true "${NO_ANALYTICS}"; then
-    ARGS+=(--no-analytics)
-fi
+NO_ANALYTICS=$(bashio::config 'no_analytics')
+[ "${NO_ANALYTICS}" = "true" ] && ARGS+=(--no-analytics)
 
 # Enable actions if requested
-if bashio::var.is_true "${ENABLE_ACTIONS}"; then
-    ARGS+=(--enable-actions)
-fi
+ENABLE_ACTIONS=$(bashio::config 'enable_actions')
+[ "${ENABLE_ACTIONS}" = "true" ] && ARGS+=(--enable-actions)
 
 # Determining ingress entry for base path
 ingress_entry=$(bashio::addon.ingress_entry)
