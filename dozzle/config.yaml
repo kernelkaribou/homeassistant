@@ -11,6 +11,7 @@ init: false
 startup: services
 ingress: true
 ingress_port: 80
+ingress_stream: true
 options:
   remote_host: ""
   no_analytics: true
