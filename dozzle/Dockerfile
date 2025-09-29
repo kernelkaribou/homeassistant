@@ -41,8 +41,9 @@ LABEL \
 
 # Copy run script
 RUN apk add --no-cache nginx
-COPY rootfs /
-RUN chmod +x /usr/bin/run.sh
+COPY rootfs/ /
+COPY run.sh /
+RUN chmod +x /run.sh
 
 # Start Dozzle
 CMD [ "/run.sh" ]
