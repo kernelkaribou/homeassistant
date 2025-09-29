@@ -14,6 +14,7 @@ ingress_port: 80
 ingress_stream: true
 options:
   remote_host: ""
+  remote_agent: ""
   no_analytics: true
   enable_actions: false
   hostname: ""
@@ -21,6 +22,7 @@ options:
   filter: ""
 schema:
   remote_host: "str?"
+  remote_agent: "str?"
   no_analytics: "bool"
   enable_actions: "bool"
   hostname: "str?"

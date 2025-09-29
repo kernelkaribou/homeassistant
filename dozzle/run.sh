@@ -9,13 +9,23 @@ set -e
 # Build command arguments
 ARGS=()
 
-# Add remote host configuration if provided
+# Add remote host (proxy)configuration if provided
 REMOTE_HOST=$(bashio::config 'remote_host')
 if bashio::var.has_value "${REMOTE_HOST}"; then
     # Split on commas, trim whitespace and add each as --remote-host
     for host in ${REMOTE_HOST//,/ }; do
         host="$(echo "$host" | xargs)"
         [ -n "$host" ] && ARGS+=(--remote-host "$host")
+    done
+fi
+
+# Add remote agent configuration if provided
+REMOTE_AGENT=$(bashio::config 'remote_agent')
+if bashio::var.has_value "${REMOTE_AGENT}"; then
+    # Split on commas, trim whitespace and add each as --remote-agent
+    for agent in ${REMOTE_AGENT//,/ }; do
+        agent="$(echo "$agent" | xargs)"
+        [ -n "$agent" ] && ARGS+=(--remote-agent "$agent")
     done
 fi
 

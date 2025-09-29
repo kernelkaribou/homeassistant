@@ -1,7 +1,10 @@
 configuration:
   remote_host:
     name: Remote Hosts
-    description: Comma-separated list of remote Docker hosts to connect to (e.g., tcp://host1:2375,tcp://host2:2375)
+    description: Comma-separated list of remote Docker hosts (socket-proxy) to connect to (e.g., tcp://host1:2375,tcp://host2:2375)
+  remote_agent:
+    name: Remote Agents
+    description: Comma-separated list of remote Dozzle agents to connect to (e.g., agent-ip:7007)
   no_analytics:
     name: Disable Analytics
     description: Disable anonymous usage analytics sent to Dozzle developers
