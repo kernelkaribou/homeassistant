@@ -52,7 +52,8 @@ cat /etc/nginx/servers/ingress.conf
 
 # Start NGINX
 bashio::log.info "Starting NGINX..."
-nginx & 
+nginx -g "daemon off; error_log /proc/1/fd/2 info;" &
+NGINX_PID=$!
 
 # Start Dozzle
 bashio::log.info "Starting Dozzle with args: ${ARGS[*]}"
