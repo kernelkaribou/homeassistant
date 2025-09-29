@@ -8,6 +8,8 @@ This is a home assistant addon for [Dozzle](https://dozzle.dev), a simple, light
 
 This Home Assistant add-on packages Dozzle and automatically tracks updates from the upstream repository at https://github.com/amir20/dozzle.
 
+The addon does not watch for any local docker sockets and will rely on remote hosts to run. Currently supports [socket-proxy](https://github.com/Tecnativa/docker-socket-proxy) accessible hosts.
+
 ## Installation
 
 1. Add this repository to your Home Assistant instance.
@@ -15,11 +17,11 @@ This Home Assistant add-on packages Dozzle and automatically tracks updates from
 3. Update all desired configuration settings, more info at [dozzle.dev](https://dozzle.dev)
 4. Start the "Dozzle" add-on.
 5. Check the logs of the "Dozzle" add-on to see if everything went well.
-6. Open the web interface at http://homeassistant.local:8080.
+6. Open the web interface using Open Web UI button or sidebar option.
 
 ## Credit
 
-Want to thank the Dozzle project for all their efforts and providing the basis of this addon. Recommend supporting the project on [Github](https://github.com/amir20/dozzle)
+Want to thank the Dozzle project for all their efforts and providing the basis of this addon. Recommend supporting the project on [Github](https://github.com/amir20/dozzle). Much of the templating was learned and built off the variety of [hassio-addons](https://github.com/hassio-addons)
 
 [aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
 [amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
