@@ -61,4 +61,4 @@ jobs:
             BUILD_ARCH=${{ matrix.arch }}
 
       - name: Built image info
-        run: echo "Published image tags: ${{ steps.meta.outputs.tags }}"
+        run: echo "Published image tags ${{ steps.meta.outputs.tags }}"
