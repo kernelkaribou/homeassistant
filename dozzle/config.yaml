@@ -10,34 +10,19 @@ arch:
 init: false
 startup: services
 ingress: true
-ingress_port: 80
 options:
   remote_host: ""
-  remote_user: ""
-  remote_key: ""
   no_analytics: true
   enable_actions: false
   hostname: ""
-  base: ""
   level: "info"
-  auth_provider: "none"
-  auth_header_user: ""
-  auth_header_email: ""
-  auth_header_name: ""
   filter: ""
 schema:
   remote_host: "str?"
-  remote_user: "str?"
-  remote_key: "str?"
   no_analytics: "bool"
   enable_actions: "bool"
   hostname: "str?"
-  base: "str?"
-  level: "list(trace|debug|info|warn|error|fatal|panic)?"
-  auth_provider: "list(none|simple|forward-proxy)?"
-  auth_header_user: "str?"
-  auth_header_email: "str?"
-  auth_header_name: "str?"
+  level: "list(debug|info)?"
   filter: "str?"
 auth_api: false
 hassio_api: true
