@@ -7,7 +7,7 @@ arch:
   - armv7
   - aarch64
   - amd64
-init: false
+# init: true
 startup: services
 ingress: true
 ingress_port: 80
@@ -27,4 +27,4 @@ schema:
   level: "list(debug|info)?"
   filter: "str?"
 auth_api: false
-hassio_api: true
+hassio_api: false
