@@ -43,9 +43,9 @@ ENABLE_ACTIONS=$(bashio::config 'enable_actions')
 ARGS+=(--addr '127.0.0.1:8080')
 
 # Determining ingress entry for base path
-ingress_entry=$(bashio::addon.ingress_entry)
-sed -i "s#%%ingress_entry%%#${ingress_entry}#g" /etc/nginx/servers/ingress.conf
-ARGS+=(--base "${ingress_entry}")
+#ingress_entry=$(bashio::addon.ingress_entry)
+#sed -i "s#%%ingress_entry%%#${ingress_entry}#g" /etc/nginx/servers/ingress.conf
+#ARGS+=(--base "${ingress_entry}")
 
 #Ingress config debug
 cat /etc/nginx/servers/ingress.conf
