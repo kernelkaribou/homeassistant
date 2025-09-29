@@ -107,7 +107,11 @@ if has_value "${HOSTNAME}"; then
 fi
 
 # Add base path from ingress
-ARGS+=(--base "/dozzle")
+base_path=$(bashio::config 'base' '')
+if [ -z "$base_path" ]; then
+    base_path=$X_INGRESS_PATH
+fi
+ARGS+=(--base "$base_path")
 
 # Add log level if provided
 if has_value "${LEVEL}"; then
