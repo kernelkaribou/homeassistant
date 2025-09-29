@@ -109,7 +109,7 @@ fi
 # Add base path from ingress
 base_path=$(bashio::config 'base' '')
 if [ -z "$base_path" ]; then
-    base_path=$X_INGRESS_PATH
+    base_path=$(bashio::ingress.entry)
 fi
 ARGS+=(--base "$base_path")
 
