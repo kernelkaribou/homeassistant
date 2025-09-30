@@ -10,8 +10,7 @@ arch:
 init: false
 startup: services
 ingress: true
-ingress_port: 8090
-network_mode: host
+ingress_port: 80
 map:
   - "share:rw"
   - "ssl:rw"
