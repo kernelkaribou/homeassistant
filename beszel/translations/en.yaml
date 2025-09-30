@@ -2,6 +2,9 @@ configuration:
   app_url:
     name: App URL
     description: The URL of the Beszel hub application
+  auto_login:
+    name: Auto Login (Optional)
+    description: Email address of a user to automatically authenticate. Don't set this unless you want to completely bypass authentication and use only one user account.
   disable_auth:
-    name: Disable Authentication
-    description: Disable login authentication for the Beszel hub, relies on OIDC
+    name: Disable Authentication (Optional
+    description: Disable password login authentication for the Beszel hub, relies on OIDC.

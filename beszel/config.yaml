@@ -16,10 +16,12 @@ map:
   - "ssl:rw"
   - "config:rw"
 options:
-  app_url: ""
+  app_url: null
+  auto_login: ""
   disable_auth: false
 schema:
   app_url: "str?"
+  auto_login: "str?"
   disable_auth: "bool"
 auth_api: false
 hassio_api: false

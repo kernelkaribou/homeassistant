@@ -9,18 +9,19 @@ set -e
 # Build command arguments
 ARGS=()
 
-# Add app URL if provided
+# Determining ingress entry for App URL and base path
+INGRESS_ENTRY=$(bashio::addon.ingress_entry)
 APP_URL=$(bashio::config 'app_url')
-[ -n "${APP_URL}" ] && ARGS+=(--app-url "${APP_URL}")
+[ -n "${APP_URL}" ] && ARGS+=("APP_URL=${APP_URL}${INGRESS_ENTRY}")
+sed -i "s#%%ingress_entry%%#${INGRESS_ENTRY}#g" /etc/nginx/servers/ingress.conf
+
+# Enable auto login if provided
+AUTO_LOGIN=$(bashio::config 'auto_login')
+[ -n "${AUTO_LOGIN}" ] && ARGS+=("AUTO_LOGIN=${AUTO_LOGIN}")
 
 # Add disable auth if requested
 DISABLE_AUTH=$(bashio::config 'disable_auth')
-[ "${DISABLE_AUTH}" = "true" ] && ARGS+=(--disable-auth)
-
-# Determining ingress entry for base path
-ingress_entry=$(bashio::addon.ingress_entry)
-sed -i "s#%%ingress_entry%%#${ingress_entry}#g" /etc/nginx/servers/ingress.conf
-ARGS+=(--base "${ingress_entry}")
+[ "${DISABLE_AUTH}" = "true" ] && ARGS+=("DISABLE_PASSWORD_AUTH=true")
 
 #Ingress config debug
 cat /etc/nginx/servers/ingress.conf
@@ -34,4 +35,4 @@ nginx &
 
 # Start Beszel
 bashio::log.info "Starting Beszel with args: ${ARGS[*]}"
-exec /usr/local/bin/beszel "${ARGS[@]}"
+exec "${ARGS[@]}" /usr/local/bin/beszel
