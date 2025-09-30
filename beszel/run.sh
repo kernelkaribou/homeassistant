@@ -46,4 +46,4 @@ bashio::log.info "Environment variables set:"
 [ -n "${AUTO_LOGIN}" ] && bashio::log.info "  AUTO_LOGIN=${AUTO_LOGIN}"
 [ -n "${DISABLE_PASSWORD_AUTH}" ] && bashio::log.info "  DISABLE_PASSWORD_AUTH=${DISABLE_PASSWORD_AUTH}"
 
-exec /usr/local/bin/beszel
+exec /usr/local/bin/beszel serve
