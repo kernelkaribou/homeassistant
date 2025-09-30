@@ -4,6 +4,7 @@
   "maintainer": "KernelKaribou",
   "description": "Custom Home Assistant add-ons with automated builds and container package management",
   "addons": [
-    "dozzle"
+    "dozzle",
+    "beszel"
   ]
 }
