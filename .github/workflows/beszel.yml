@@ -112,7 +112,7 @@ jobs:
             BUILD_FROM=ghcr.io/hassio-addons/base:18.1.3
             BUILD_ARCH=${{ matrix.arch }}
             BUILD_VERSION=${{ needs.check-version.outputs.addon-version }}
-            BESZEL_VERSION=v${{ needs.check-version.outputs.beszel-version }}
+            BESZEL_VERSION=${{ needs.check-version.outputs.beszel-version }}
 
   commit-version:
     needs: [check-version, build]
