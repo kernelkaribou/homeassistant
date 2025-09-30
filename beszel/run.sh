@@ -23,9 +23,9 @@ if [ -n "${AUTO_LOGIN}" ]; then
     export AUTO_LOGIN="${AUTO_LOGIN}"
 fi
 
-# Add disable auth if requested
-DISABLE_AUTH=$(bashio::config 'disable_auth')
-if [ "${DISABLE_AUTH}" = "true" ]; then
+# Add disable password auth if requested
+DISABLE_PASSWORD_AUTH=$(bashio::config 'disable_password_auth')
+if [ "${DISABLE_PASSWORD_AUTH}" = "true" ]; then
     export DISABLE_PASSWORD_AUTH="true"
 fi
 
