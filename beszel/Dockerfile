@@ -1,9 +1,9 @@
 # Build arguments that need to be available across stages
 ARG BUILD_FROM=ghcr.io/hassio-addons/base:18.1.3
-ARG DOZZLE_VERSION=latest
+ARG BESZEL_VERSION=latest
 
-# Multi-stage build to get Dozzle binary
-FROM amir20/dozzle:${DOZZLE_VERSION} AS dozzle
+# Multi-stage build to get Beszel binary
+FROM henrygd/beszel:${BESZEL_VERSION} AS beszel
 
 # Use Home Assistant addon base image which includes bashio
 FROM ${BUILD_FROM}
@@ -12,38 +12,35 @@ FROM ${BUILD_FROM}
 ARG BUILD_ARCH
 ARG BUILD_VERSION
 
-# Install any missing dependencies and verify bashio
-RUN \
-    if ! command -v bashio::config >/dev/null 2>&1; then \
-        echo "bashio not available, addon will use fallback functions"; \
-    else \
-        echo "bashio is available"; \
-    fi
+# Install required packages
+RUN apk add --no-cache \
+    nginx \
+    ca-certificates
 
-# Copy Dozzle binary from official image
-COPY --from=dozzle /dozzle /usr/bin/dozzle
+# Copy Beszel hub binary and web assets from official image
+# The official image contains both the binary and web assets
+COPY --from=beszel /app /app
 
-# Make dozzle executable
-RUN chmod +x /usr/bin/dozzle
+# Make beszel executable (it should already be, but ensure it)
+RUN chmod +x /app/beszel
 
 # Labels
 LABEL \
-    io.hass.name="Dozzle" \
-    io.hass.description="A simple, lightweight application that provides you with a web based interface to monitor your Docker container logs live, provided by https://dozzle.dev." \
+    io.hass.name="Beszel" \
+    io.hass.description="Simple, lightweight server monitoring with Docker stats, historical data, and alerts. Provided by beszel.dev" \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.type="addon" \
     io.hass.version="${BUILD_VERSION}" \
     maintainer="KernelKaribou" \
-    org.opencontainers.image.title="Dozzle" \
-    org.opencontainers.image.description="A simple, lightweight application that provides you with a web based interface to monitor your Docker container logs live, provided by https://dozzle.dev." \
+    org.opencontainers.image.title="Beszel" \
+    org.opencontainers.image.description="Simple, lightweight server monitoring with Docker stats, historical data, and alerts. Provided by beszel.dev" \
     org.opencontainers.image.source="https://github.com/kernelkaribou/homeassistant" \
     org.opencontainers.image.licenses="MIT"
 
-# Copy run script
-RUN apk add --no-cache nginx
+# Copy configuration files and run script
 COPY rootfs/ /
 COPY run.sh /
 RUN chmod +x /run.sh
 
-# Start Dozzle
+# Start Beszel
 CMD [ "/run.sh" ]
