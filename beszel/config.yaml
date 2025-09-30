@@ -11,6 +11,7 @@ init: false
 startup: services
 ingress: true
 ingress_port: 8090
+network_mode: host
 map:
   - "share:rw"
   - "ssl:rw"
