@@ -32,9 +32,6 @@ nginx -t -c /etc/nginx/nginx.conf
 bashio::log.info "Starting NGINX..."
 nginx &
 
-# Change to the app directory where web assets are located
-cd /app
-
 # Start Beszel
 bashio::log.info "Starting Beszel with args: ${ARGS[*]}"
-exec ./beszel "${ARGS[@]}"
+exec /usr/local/bin/beszel "${ARGS[@]}"
