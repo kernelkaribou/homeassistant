@@ -1,4 +1,4 @@
-name: Build and Publish Dozzle Addon
+name: Build and Publish Beszel Addon
 
 on:
   schedule:
@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'dozzle/**'
-      - '.github/workflows/dozzle.yml'
+      - 'beszel/**'
+      - '.github/workflows/beszel.yml'
 
 permissions:
   contents: write
@@ -16,36 +16,36 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/addon-dozzle
+  IMAGE_NAME: ${{ github.repository }}/addon-beszel
 
 jobs:
   check-version:
     runs-on: ubuntu-latest
     outputs:
       should-build: ${{ steps.version-check.outputs.should-build }}
-      dozzle-version: ${{ steps.version-check.outputs.dozzle-version }}
+      beszel-version: ${{ steps.version-check.outputs.beszel-version }}
       addon-version: ${{ steps.version-check.outputs.addon-version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check Dozzle version
+      - name: Check Beszel version
         id: version-check
         run: |
-          # Get latest Dozzle release
-          DOZZLE_VERSION=$(curl -s https://api.github.com/repos/amir20/dozzle/releases/latest | jq -r '.tag_name' | sed 's/^v//')
-          echo "Latest Dozzle version: $DOZZLE_VERSION"
+          # Get latest Beszel release
+          BESZEL_VERSION=$(curl -s https://api.github.com/repos/henrygd/beszel/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+          echo "Latest Beszel version: $BESZEL_VERSION"
           
           # Get current addon version from config.yaml
-          CURRENT_VERSION=$(grep '^version:' dozzle/config.yaml | cut -d'"' -f2 | tr -d ' ')
+          CURRENT_VERSION=$(grep '^version:' beszel/config.yaml | cut -d'"' -f2 | tr -d ' ')
           echo "Current addon version: $CURRENT_VERSION"
           
           # Set outputs
-          echo "dozzle-version=$DOZZLE_VERSION" >> $GITHUB_OUTPUT
-          echo "addon-version=$DOZZLE_VERSION" >> $GITHUB_OUTPUT
+          echo "beszel-version=$BESZEL_VERSION" >> $GITHUB_OUTPUT
+          echo "addon-version=$BESZEL_VERSION" >> $GITHUB_OUTPUT
           
           # Check if we need to build (version changed or manual trigger)
-          if [ "$DOZZLE_VERSION" != "$CURRENT_VERSION" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event_name }}" = "push" ]; then
+          if [ "$BESZEL_VERSION" != "$CURRENT_VERSION" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event_name }}" = "push" ]; then
             echo "should-build=true" >> $GITHUB_OUTPUT
             echo "Version update needed or manual trigger"
           else
@@ -79,15 +79,15 @@ jobs:
 
       - name: Update addon version
         run: |
-          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/config.yaml
-          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/build.yaml
+          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' beszel/config.yaml
+          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' beszel/build.yaml
 
       - name: Log current versions
         run: |
-          echo "Building Dozzle addon with:"
-          echo "  Config version: $(grep '^version:' dozzle/config.yaml | cut -d':' -f2 | tr -d ' \"')"
-          echo "  Build version: $(grep '^version:' dozzle/build.yaml | cut -d':' -f2 | tr -d ' \"')"
-          echo "  Target Dozzle version: v${{ needs.check-version.outputs.dozzle-version }}"
+          echo "Building Beszel addon with:"
+          echo "  Config version: $(grep '^version:' beszel/config.yaml | cut -d':' -f2 | tr -d ' \"')"
+          echo "  Build version: $(grep '^version:' beszel/build.yaml | cut -d':' -f2 | tr -d ' \"')"
+          echo "  Target Beszel version: v${{ needs.check-version.outputs.beszel-version }}"
 
       - name: Extract metadata
         id: meta
@@ -103,7 +103,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./dozzle
+          context: ./beszel
           platforms: linux/${{ matrix.arch == 'armv7' && 'arm/v7' || matrix.arch == 'aarch64' && 'arm64' || matrix.arch }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
@@ -112,7 +112,7 @@ jobs:
             BUILD_FROM=ghcr.io/hassio-addons/base:18.1.3
             BUILD_ARCH=${{ matrix.arch }}
             BUILD_VERSION=${{ needs.check-version.outputs.addon-version }}
-            DOZZLE_VERSION=v${{ needs.check-version.outputs.dozzle-version }}
+            BESZEL_VERSION=v${{ needs.check-version.outputs.beszel-version }}
 
   commit-version:
     needs: [check-version, build]
@@ -126,15 +126,15 @@ jobs:
 
       - name: Update addon version
         run: |
-          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/config.yaml
-          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/build.yaml
+          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' beszel/config.yaml
+          sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' beszel/build.yaml
 
       - name: Commit version update
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add dozzle/config.yaml dozzle/build.yaml
-          git diff --staged --quiet || (git commit -m "Update Dozzle addon to version ${{ needs.check-version.outputs.addon-version }}" && git push)
+          git add beszel/config.yaml beszel/build.yaml
+          git diff --staged --quiet || (git commit -m "Update Beszel addon to version ${{ needs.check-version.outputs.addon-version }}" && git push)
 
   cleanup-packages:
     needs: [check-version, build]
