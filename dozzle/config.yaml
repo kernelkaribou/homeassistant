@@ -10,9 +10,8 @@ arch:
 init: false
 startup: services
 ingress: true
-ingress_port: 8080
+ingress_port: 80
 ingress_stream: true
-host_network: true
 options:
   remote_host: ""
   remote_agent: ""
