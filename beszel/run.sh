@@ -30,7 +30,10 @@ if [ "${DISABLE_PASSWORD_AUTH}" = "true" ]; then
 fi
 
 #Ingress config debug
+echo "Nginx Ingress Config:"
+echo "----------------------------"
 cat /etc/nginx/servers/ingress.conf
+echo "----------------------------"
 
 # Checking Nginx Syntax
 nginx -t -c /etc/nginx/nginx.conf
