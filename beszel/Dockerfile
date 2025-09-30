@@ -19,10 +19,10 @@ RUN apk add --no-cache \
 
 # Copy Beszel hub binary and web assets from official image
 # The official image contains both the binary and web assets
-COPY --from=beszel /app /app
+COPY --from=beszel /beszel /usr/local/bin/beszel
 
 # Make beszel executable (it should already be, but ensure it)
-RUN chmod +x /app/beszel
+RUN chmod +x /usr/local/bin/beszel
 
 # Labels
 LABEL \
