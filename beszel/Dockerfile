@@ -2,8 +2,8 @@
 ARG BUILD_FROM=ghcr.io/hassio-addons/base:18.1.3
 ARG BESZEL_VERSION=latest
 
-# Multi-stage build to get Beszel binary
-FROM henrygd/beszel:${BESZEL_VERSION} AS beszel
+# Multi-stage build to get Beszel binary from GitHub Container Registry
+FROM ghcr.io/henrygd/beszel/beszel:${BESZEL_VERSION} AS beszel
 
 # Use Home Assistant addon base image which includes bashio
 FROM ${BUILD_FROM}
