@@ -44,6 +44,6 @@ bashio::log.info "Starting Beszel..."
 bashio::log.info "Environment variables set:"
 [ -n "${APP_URL}" ] && bashio::log.info "  APP_URL=${APP_URL}"
 [ -n "${AUTO_LOGIN}" ] && bashio::log.info "  AUTO_LOGIN=${AUTO_LOGIN}"
-[ -n "${DISABLE_PASSWORD_AUTH}" ] && bashio::log.info "  DISABLE_PASSWORD_AUTH=${DISABLE_PASSWORD_AUTH}"
+[ "${DISABLE_PASSWORD_AUTH}" = "true" ] && bashio::log.info "  DISABLE_PASSWORD_AUTH=${DISABLE_PASSWORD_AUTH}"
 
 exec /usr/local/bin/beszel serve
