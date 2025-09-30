@@ -1,0 +1,25 @@
+name: "Beszel"
+version: "0.12.12"
+slug: "beszel"
+description: "Simple, lightweight server monitoring with Docker stats, historical data, and alerts. Provided by beszel.dev"
+url: "https://beszel.dev"
+arch:
+  - armv7
+  - aarch64
+  - amd64
+init: false
+startup: services
+ingress: true
+ingress_port: 80
+map:
+  - "share:rw"
+  - "ssl:rw"
+  - "config:rw"
+options:
+  app_url: ""
+  disable_auth: false
+schema:
+  app_url: "str?"
+  disable_auth: "bool"
+auth_api: false
+hassio_api: false

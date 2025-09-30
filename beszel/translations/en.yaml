@@ -1,0 +1,7 @@
+configuration:
+  app_url:
+    name: App URL
+    description: The URL of the Beszel hub application
+  disable_auth:
+    name: Disable Authentication
+    description: Disable login authentication for the Beszel hub, relies on OIDC
