@@ -1,5 +1,5 @@
 name: "Dozzle"
-version: "8.14.3"
+version: "8.14.4"
 slug: "dozzle"
 description: "A simple, lightweight application that provides you with a web based interface to monitor your Docker container logs live."
 url: "https://dozzle.dev"
