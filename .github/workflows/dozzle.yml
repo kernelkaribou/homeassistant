@@ -6,6 +6,8 @@ on:
     - cron: '0 2 * * *'
   workflow_dispatch:
   push:
+    branches:
+      - dozzle
     paths:
       - 'dozzle/**'
       - '.github/workflows/dozzle.yml'
@@ -21,6 +23,8 @@ env:
 jobs:
   check-version:
     runs-on: ubuntu-latest
+    # Only run on dozzle branch or manual trigger
+    if: github.ref == 'refs/heads/dozzle' || github.event_name == 'workflow_dispatch'
     outputs:
       should-build: ${{ steps.version-check.outputs.should-build }}
       dozzle-version: ${{ steps.version-check.outputs.dozzle-version }}
@@ -28,6 +32,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: dozzle
 
       - name: Check Dozzle version
         id: version-check
@@ -66,6 +72,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: dozzle
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -123,18 +131,46 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: dozzle
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create or switch to dozzle branch
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Check if dozzle branch exists locally
+          if git show-ref --verify --quiet refs/heads/dozzle; then
+            echo "Dozzle branch exists locally, switching to it"
+            git checkout dozzle
+          elif git show-ref --verify --quiet refs/remotes/origin/dozzle; then
+            echo "Dozzle branch exists remotely, checking it out"
+            git checkout -b dozzle origin/dozzle
+          else
+            echo "Creating new dozzle branch from main"
+            git checkout -b dozzle
+          fi
+
+          # Merge latest changes from dozzle
+          git merge dozzle --no-edit || echo "No changes to merge or conflicts resolved"
 
       - name: Update addon version
         run: |
           sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/config.yaml
           sed -i 's/^version:.*/version: "${{ needs.check-version.outputs.addon-version }}"/' dozzle/build.yaml
 
-      - name: Commit version update
+      - name: Commit and push version update
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
           git add dozzle/config.yaml dozzle/build.yaml
-          git diff --staged --quiet || (git commit -m "Update Dozzle addon to version ${{ needs.check-version.outputs.addon-version }}" && git push)
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update Dozzle addon to version ${{ needs.check-version.outputs.addon-version }}"
+            git push origin dozzle
+            echo "Version update committed and pushed to dozzle branch"
+          fi
 
   cleanup-packages:
     needs: [check-version, build]
