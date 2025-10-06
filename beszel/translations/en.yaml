@@ -1,7 +1,6 @@
 configuration:
   app_url:
     name: Home Assistant URL
-    value: https://hass.example.com
     description: The URL of the Home Assistant instance e.g. https://hass.example.com, Beszel instance will be appended to this.
   auto_login:
     name: Auto Login (Optional)
