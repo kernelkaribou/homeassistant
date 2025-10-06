@@ -1,7 +1,8 @@
 configuration:
   app_url:
-    name: App URL
-    description: The URL of the Beszel hub application
+    name: Home Assistant URL
+    value: https://hass.example.com
+    description: The URL of the Home Assistant instance e.g. https://hass.example.com, Beszel instance will be appended to this.
   auto_login:
     name: Auto Login (Optional)
     description: Email address of a user to automatically authenticate. Don't set this unless you want to completely bypass authentication and use only one user account.
