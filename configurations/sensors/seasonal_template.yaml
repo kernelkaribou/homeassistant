@@ -1,0 +1,55 @@
+# =========================
+# SEASON SENSOR TEMPLATE 
+# 
+# Recognize various dates and time ranges of year for seasonal/holiday
+# representation.
+# =========================
+- platform: template # <--- This is where your original error came from!
+  sensors:
+    season_name:
+      unique_id: "season_sensor"
+      friendly_name: "Season Name"
+      icon_template: mdi:calendar
+      value_template: >
+        {% set today = now().date() %}
+        
+        {# --- Valentine's Day: Feb 14 ONLY --- #}
+        {% if today.month == 2 and today.day == 14 %}
+            Valentines
+        
+        {# --- St Patrick's Day: Mar 17 ONLY --- #}
+        {% elif today.month == 3 and today.day == 17 %}
+            StPatricks
+        
+        {# --- 4th of July: Jul 4 ONLY --- #}
+        {% elif today.month == 7 and today.day == 4 %}
+            July4
+        
+        {# --- Halloween: Oct 1 - Oct 31 --- #}
+        {% elif today.month == 10 %}
+            Halloween
+        
+        {# --- Fall / Christmas transition logic in November (using 4th Thursday for Thanksgiving) --- #}
+        {% elif today.month == 11 %}
+            {% set first_nov = today.replace(month=11, day=1) %}
+            {% set weekday_first = first_nov.weekday() %} 
+            {% set days_until_thursday = (3 - weekday_first + 7) % 7 %}
+            {% set first_thursday = first_nov + timedelta(days=days_until_thursday) %}
+            {% set fourth_thursday = first_thursday + timedelta(days=21) %}
+            {% set fall_end = fourth_thursday - timedelta(days=1) %}
+
+            {% if today <= fall_end %}
+                Fall
+            {% else %}
+                Christmas
+            {% endif %}
+
+        {# --- Christmas: Dec 1 - Dec 31 --- #}
+        {% elif today.month == 12 %}
+            Christmas
+
+        {# --- Default catch-all --- #}
+        {% else %}
+            OffSeason
+
+        {% endif %}
