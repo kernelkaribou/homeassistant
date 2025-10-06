@@ -1,5 +1,5 @@
 name: "Beszel"
-version: "0.12.12"
+version: "0.13.1"
 slug: "beszel"
 description: "Simple, lightweight server monitoring with Docker stats, historical data, and alerts. Provided by beszel.dev"
 url: "https://beszel.dev"
